@@ -6,9 +6,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +32,12 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyNotesViewHolder> {
     Context context;
     List<MyNotes> list;
 
+    EditText utitle;
+    EditText unote;
+    Button update;
+    String uptitle;
+    String upnote;
+
     public Adapter(Context context, List<MyNotes> list) {
         this.context = context;
         this.list = list;
@@ -47,6 +56,37 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyNotesViewHolder> {
 
         holder.title.setText(list.get(position).getTitle());
         holder.notes.setText(list.get(position).getNote());
+
+        holder.edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                LayoutInflater layoutInflaterc = LayoutInflater.from(context);
+                View dialoglayout  = layoutInflaterc.inflate(R.layout.update,null);
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setView(dialoglayout );
+                final AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+
+                 utitle = dialoglayout.findViewById(R.id.utitle);
+                 unote = dialoglayout.findViewById(R.id.unote);
+                update = dialoglayout.findViewById(R.id.update);
+
+                update.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        alertDialog.cancel();
+                         uptitle = utitle.getText().toString();
+                         upnote = unote.getText().toString();
+
+                        MyNotes myNotes = list.get(position);
+                        updateTask(myNotes);
+
+                    }
+                });
+
+            }
+        });
 
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +124,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyNotesViewHolder> {
     class MyNotesViewHolder extends RecyclerView.ViewHolder{
 
         private TextView title,notes;
-        private ImageView delete;
+        private ImageView delete,edit;
         private CardView main_card;
 
         public MyNotesViewHolder(@NonNull View itemView) {
@@ -94,7 +134,35 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyNotesViewHolder> {
             notes = itemView.findViewById(R.id.notes);
             main_card = itemView.findViewById(R.id.main_card);
             delete = itemView.findViewById(R.id.delete);
+            edit = itemView.findViewById(R.id.edit);
         }
+    }
+
+    private void updateTask(final MyNotes myNotes){
+
+        class UpdateTask extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                myNotes.setTitle(uptitle);
+                myNotes.setNote(upnote);
+
+                DatabaseClient.getInstance(context).getAppDatabase()
+                        .myNotesDao()
+                        .update(myNotes);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                Toast.makeText(context, "Updated", Toast.LENGTH_LONG).show();
+            }
+        }
+
+        UpdateTask ut = new UpdateTask();
+        ut.execute();
     }
 
     private void deleteTask(final MyNotes myNotes) {
