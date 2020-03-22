@@ -2,6 +2,7 @@ package com.example.mynotes.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -59,8 +60,9 @@ public class AddActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-
                 Toast.makeText(AddActivity.this, "Saved", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(AddActivity.this,MainActivity.class));
+               finish();
             }
         }
         SaveTask st = new SaveTask();
