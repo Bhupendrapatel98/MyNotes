@@ -62,7 +62,7 @@ public class AddActivity extends AppCompatActivity {
                 super.onPostExecute(aVoid);
                 Toast.makeText(AddActivity.this, "Saved", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(AddActivity.this,MainActivity.class));
-               finish();
+                 finish();
             }
         }
         SaveTask st = new SaveTask();
