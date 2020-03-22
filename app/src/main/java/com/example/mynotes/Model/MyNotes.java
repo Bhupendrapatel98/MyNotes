@@ -20,12 +20,6 @@ public class MyNotes implements Serializable {
     @ColumnInfo(name = "note")
     String note;
 
-    public MyNotes(int id, String title, String note) {
-        this.id = id;
-        this.title = title;
-        this.note = note;
-    }
-
     public int getId() {
         return id;
     }

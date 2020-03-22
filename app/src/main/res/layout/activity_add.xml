@@ -12,20 +12,22 @@
         android:layout_height="match_parent">
 
    <EditText
+       android:id="@+id/title"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:hint="Title"/>
 
     <EditText
+        android:id="@+id/note"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:hint="Title"
+        android:hint="Note"
         android:gravity="top"/>
 
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/float_btn"
+        android:id="@+id/done_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/done"
